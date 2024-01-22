@@ -7,7 +7,8 @@ const url = `https://api.unsplash.com/search/photos?client_id=${import.meta.env.
 
 export default function Gallery() {
   const {searchTerm} = useGlobalContext();
-  const response = useQuery({
+
+  const { data , error, isLoading } = useQuery({
     queryKey: ["images", searchTerm],
     // Durch die Nutzung der 'searchTerm' in 'QueryKey' kann die in der Eingabe eingegebenen Daten speichern und ein erneutes Laden verhindern. Dadurch erhöht sich die Geschwindigkeit der geladenen Informationen beim Nachladen
     queryFn: async () => {
@@ -15,7 +16,8 @@ export default function Gallery() {
       return result.data;
     },
   });
-     if (response.isLoading) {
+
+     if (isLoading) {
        return (
          <section className="image-container">
            <h4>Loading...</h4>
@@ -23,7 +25,7 @@ export default function Gallery() {
        );
      }
      
-   if (response.isError) {
+   if (error) {
      return (
        <section className="image-container">
          <h4>There was an error...</h4>
@@ -31,7 +33,7 @@ export default function Gallery() {
      );
    }
 
-   const results = response.data.results;
+   const results = data.results;
    if (results.length < 1) {
      return (
        <section className="image-container">
@@ -39,7 +41,8 @@ export default function Gallery() {
        </section>
      );
    }
-   console.log(results)
+  
+   
 
   return (
     <section className="image-container">
